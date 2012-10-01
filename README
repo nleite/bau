@@ -1,0 +1,4 @@
+BAU - Mongodb dump file stream query analyser.
+
+Description:
+This is project is a test to check the performance of node.js streams to enable querying over offline backup files, produced by mongoexport or mongodump, in other to extend the type search capabilities over deltas of data.
