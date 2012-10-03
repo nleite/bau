@@ -1,11 +1,11 @@
-
 //load file system lib
 var fs = require('fs');
 //load jsonps lib 
 var jsonsp = require('jsonsp');
 //load file to read filed
 var readStream = fs.ReadStream(__dirname + "/mails.json");
-
+//load stream
+var stream = require('stream');
 var parser = new jsonsp.Parser();
 
 //var query = {'From': 'Jenna deBoisblanc <jenna.deboisblanc@10gen.com>'};
@@ -13,22 +13,35 @@ var parser = new jsonsp.Parser();
 var query = {};
 //var keys = Object.keys(query);
 var keys = [];
+
+var out = './file.out';
+
 process.argv.forEach( function(val, index){
     if (index >  1){
-       var vs = val.split('=');
-       var k = vs[0];
-       var v = '(.*)';
-       if (vs.length > 0){
-           v = vs[1];
-       }
-       query[k] = v; 
-       keys.push(k);
+        var vs = val.split('=');
+        if ( vs['query'] != null){
+            var ks = vs[0].split(':');
+            var k = ks[0];
+            var v = '(.*)';
+            if (ks.length > 0){
+                v = ks[1];
+            }
+            query[k] = v; 
+            keys.push(k);
+        }
+
+        if ( vs['out'] != null){
+            out = vs['out'];
+        }
     }
 });
 
+//var writeStream = new stream.Stream();
+var writeStream = fs.createWriteStream(out);
+writeStream.writable = true;
+
+var fd = '';
 //console.log( "Query -> %j " , query );
-
-
 //console.log( 'Keys ->' + keys );
 
 parser.on( 'object', function(obj){
